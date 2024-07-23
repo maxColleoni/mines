@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tile : MonoBehaviour
+public class Tile
 {
-    // Start is called before the first frame update
-    void Start()
-    {
+    public int index;
+    public int adjacentMines;
+    public bool isShown;
+    public bool isMine;
+    public Vector2 position;
+
+    void Show(){
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    void Flag(){
         
     }
 }
