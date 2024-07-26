@@ -9,12 +9,4 @@ public class Tile
     public bool isShown;
     public bool isMine;
     public Vector2 position;
-
-    void Show(){
-        
-    }
-
-    void Flag(){
-        
-    }
 }
