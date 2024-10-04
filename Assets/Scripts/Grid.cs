@@ -59,6 +59,42 @@ public class Grid : MonoBehaviour
                 count++;
             }
         }
+
+        // int n = 0;
+        // int t = 0;
+        // for (int i = 0; i < tiles.count; i++)
+        // {
+        //     Tile tile = tiles[i];
+        //     if (tile.isMine)
+        //     {
+        //         int x = tile.position.x
+        //         int y = tile.position.y
+        //         // Esquinas
+        //         if (x == 0 && y == 0)
+        //         {
+        //             if (tiles[i + 1].isMine) { t += 1 }
+        //             if ( == 1) { t += 1 }
+        //             if ( == 1) { t += 1 }
+        //             // Se asigna el valor al objeto Tile
+        //                 = t
+        //         }
+        //         if (x == size.x && y == size.y)
+        //         {
+
+        //         }
+        //         // Bordes
+
+        //         // Interior
+
+        //     }
+        // }
+
+
+
+
+
+
+
     }
 
     Tile GetTile(int count, Vector2 position, bool isMine)
@@ -72,10 +108,10 @@ public class Grid : MonoBehaviour
         return tile;
     }
 
-    bool GetIsMine()
+    void addNumbersToTiles(int index, int n)
     {
-        // logica para ver si es true o false
-        return false;
+        var tile = tiles.FirstOrDefault(t => t.index == index);
+        tile.adjacentMines = n;
     }
 
     void CreateGridUI()
@@ -119,7 +155,8 @@ public class Grid : MonoBehaviour
             tileButton?.ShowMine();
             return;
         }
-        Debug.LogError($"Is mine? {tile.isMine} mine {index}");
+        Debug.LogError($"Is mine? {tile.isMine}");
+        Debug.LogError($"Adjacent mines? {tile.adjacentMines}");
 
         tileButton.ShowNumber(3);
 
