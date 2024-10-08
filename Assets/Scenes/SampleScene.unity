@@ -167,8 +167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b7b53748bf208444af7542e9d520a71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: {x: 15, y: 10}
-  totalMines: 10
+  gridSize: {x: 10, y: 15}
+  totalMines: 100
   gridLayout: {fileID: 787350546}
   tilePrefab: {fileID: 6888238018171071740, guid: 437c21eb754b92a4d99cc9e3b1e916b8, type: 3}
 --- !u!1 &519420028
