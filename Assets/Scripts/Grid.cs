@@ -135,7 +135,10 @@ public class Grid : MonoBehaviour
 
     void ClearGrid()
     {
-        tileButtons.ForEach(Destroy);
+        foreach (Transform child in gridLayout.transform){
+            Destroy(child.gameObject);
+        }
+        
         tileButtons.Clear();
     }
 
