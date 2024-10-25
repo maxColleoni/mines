@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Grid : MonoBehaviour
@@ -14,6 +15,7 @@ public class Grid : MonoBehaviour
 
     List<Tile> tiles;
     List<TileButton> tileButtons;
+    List<int> _mineIds = new List<int>();
 
     private void Start()
     {
@@ -32,14 +34,14 @@ public class Grid : MonoBehaviour
         Vector2 size = gridSize;
 
         // TODO: refactoring como método
-        List<int> mineIds = new();
+        _mineIds = new();
         System.Random rnd = new();
         for (int i = 0; i < totalMines; i++)
         {
             int id = rnd.Next(0, (int)size.x * (int)size.y);
-            if (!mineIds.Contains(id))
+            if (!_mineIds.Contains(id))
             {
-                mineIds.Add(id);
+                _mineIds.Add(id);
             }
         }
 
@@ -48,7 +50,7 @@ public class Grid : MonoBehaviour
         {
             for (int j = 0; j < size.x; j++)
             {
-                bool isMine = mineIds.Contains(count);
+                bool isMine = _mineIds.Contains(count);
                 Tile tile = CreateTile(count, new Vector2(i, j), isMine);
                 tiles.Add(tile);
                 count++;
@@ -137,18 +139,64 @@ public class Grid : MonoBehaviour
         tileButtons.Clear();
     }
 
-    void OnTilePressedHandler(int index)
+    void OnTilePressedHandler(int index, PointerEventData eventData)
     {
         var tile = tiles.FirstOrDefault(t => t.index == index);
         var tileButton = tileButtons.FirstOrDefault(t => t.Index == index);
 
-        if (tile != null && tile.isMine)
-        {
-            tileButton?.ShowMine();
+        if (tile == null || tileButton == null){
             return;
         }
 
-        tileButton.ShowNumber(tile.adjacentMines);
+        switch (eventData.button){
+            case PointerEventData.InputButton.Left when tile.isMine:
+                tileButton.ShowMine();
+                return;
+            case PointerEventData.InputButton.Left:
+                tileButton.ShowNumber();
+                break;
+            case PointerEventData.InputButton.Right:
+                tileButton.FlagMine();
+                if (AreAllMinesFlagged()){
+                    Debug.LogError("WIN GAME");
+                    RevealRemainingTiles();
+                }
+                
+                break;
+            case PointerEventData.InputButton.Middle:
+                tileButton.FlagUnknown();
+                
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
 
     }
+
+
+    bool AreAllMinesFlagged(){
+        bool allMinesFlagged = tileButtons
+            .Where(tile => _mineIds.Contains(tile.Index))
+            .All(tile => tile.IsFlagged);
+    
+        bool noExtraFlags = tileButtons
+            .Where(tile => !_mineIds.Contains(tile.Index))
+            .All(tile => !tile.IsFlagged);
+        
+        return allMinesFlagged && noExtraFlags;
+    }
+
+
+
+    void RevealRemainingTiles(){
+        List<int> tilesToReveal = tiles.Where(t => !t.isShown).Select(t=> t.index).ToList();
+        if (tilesToReveal.Count > 0){
+            tileButtons
+                .Where(tile => tilesToReveal.Contains(tile.Index))
+                .ToList()
+                .ForEach(t=> t.ShowNumber());
+        }
+        
+    }
+
 }
