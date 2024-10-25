@@ -44,13 +44,11 @@ public class Grid : MonoBehaviour
         }
 
         int count = 0;
-        bool isMine = false;
         for (int i = 0; i < size.y; i++)
         {
             for (int j = 0; j < size.x; j++)
             {
-                isMine = mineIds.Contains(count);
-
+                bool isMine = mineIds.Contains(count);
                 Tile tile = CreateTile(count, new Vector2(i, j), isMine);
                 tiles.Add(tile);
                 count++;
@@ -59,15 +57,8 @@ public class Grid : MonoBehaviour
 
         for (int i = 0; i < tiles.Count; i++)
         {
-            Tile tile = tiles[i];
-        }
-
-        for (int i = 0; i < tiles.Count; i++)
-        {
-            // numero de mines en un tile
             int mineCount = 0;
             Tile tile = tiles[i];
-            // Debug.LogError($"Index({tile.index}) position: {tile.position}");
             if (!tile.isMine)
             {
                 int x = (int)tile.position.x;
@@ -78,21 +69,15 @@ public class Grid : MonoBehaviour
                     for (int j = -1; j < 2; j++)
                     {
                         Vector2 v = new Vector2(x + j, y + k);
-                        Tile t = createTileByPostion(v);
+                        Tile t = CreateTileByPosition(v);
                         if (t != null && t.isMine)
                         {
-                            // Debug.LogError($"       vector: {t.index}: {v}");
                             mineCount += 1;
                         }
 
-                        if (t != null)
-                        {
-                            // Debug.LogError($"isMine {t.isMine}");
-                        }
                     }
                 }
                 tile.adjacentMines = mineCount;
-                // Debug.LogError($"tile index:{tile.index}, {tile.adjacentMines}, {tile.position}");
             }
         }
     }
@@ -108,7 +93,7 @@ public class Grid : MonoBehaviour
         return tile;
     }
 
-    Tile createTileByPostion(Vector2 position)
+    Tile CreateTileByPosition(Vector2 position)
     {
         Tile tile = null;
         for (int i = 0; i < tiles.Count; i++)
@@ -121,12 +106,6 @@ public class Grid : MonoBehaviour
             tile = t;
         }
         return tile;
-    }
-
-    void addNumbersToTiles(int index, int n)
-    {
-        var tile = tiles.FirstOrDefault(t => t.index == index);
-        tile.adjacentMines = n;
     }
 
     void CreateGridUI()
@@ -160,8 +139,6 @@ public class Grid : MonoBehaviour
 
     void OnTilePressedHandler(int index)
     {
-
-
         var tile = tiles.FirstOrDefault(t => t.index == index);
         var tileButton = tileButtons.FirstOrDefault(t => t.Index == index);
 
@@ -170,8 +147,6 @@ public class Grid : MonoBehaviour
             tileButton?.ShowMine();
             return;
         }
-        // Debug.LogError($"Is mine? {tile.isMine}");
-        // Debug.LogError($"Adjacent mines? {tile.adjacentMines}");
 
         tileButton.ShowNumber(tile.adjacentMines);
 
